@@ -21,23 +21,19 @@ public class CharacterModel : MonoBehaviour
     private GameObject headModel;
     private readonly List<GameObject> weaponModels = new List<GameObject>();
 
-    public void SetHeadModel(HeadData data)
+    public void SetHeadModel(GameObject model)
     {
         if (headModel != null)
             Destroy(headModel);
-        if (data == null)
-            return;
-        headModel = AddModel(data.modelObject, headContainer, null);
+        headModel = AddModel(model, headContainer, null);
     }
 
-    public void SetWeaponModel(WeaponData data)
+    public void SetWeaponModel(GameObject rightHandModel, GameObject leftHandModel, GameObject shieldModel)
     {
         ClearGameObjects(weaponModels);
-        if (data == null)
-            return;
-        AddModel(data.rightHandObject, rightHandContainer, weaponModels);
-        AddModel(data.leftHandObject, leftHandContainer, weaponModels);
-        AddModel(data.shieldObject, shieldContainer, weaponModels);
+        AddModel(rightHandModel, rightHandContainer, weaponModels);
+        AddModel(leftHandModel, leftHandContainer, weaponModels);
+        AddModel(shieldModel, shieldContainer, weaponModels);
     }
 
     private void ClearGameObjects(List<GameObject> list)
