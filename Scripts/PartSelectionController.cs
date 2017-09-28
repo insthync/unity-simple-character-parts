@@ -24,26 +24,28 @@ public class PartSelectionController : MonoBehaviour
     public Text rightKneeIndexText;
     public Text armPartsIndexText;
     public Text legPartsIndexText;
+    public Text allBodyPartsText;
     PartsCollections collections;
-    int headIndex;
-    int hairIndex;
-    int headAccesoriesIndex;
-    int leftShoulderIndex;
-    int leftElbowIndex;
-    int leftWeaponIndex;
-    int leftShieldIndex;
-    int rightShoulderIndex;
-    int rightElbowIndex;
-    int rightWeaponIndex;
-    int chestIndex;
-    int spineIndex;
-    int lowerSpineIndex;
-    int leftHipIndex;
-    int leftKneeIndex;
-    int rightHipIndex;
-    int rightKneeIndex;
-    int armPartsIndex;
-    int legPartsIndex;
+    int headIndex = -1;
+    int hairIndex = -1;
+    int headAccesoriesIndex = -1;
+    int leftShoulderIndex = -1;
+    int leftElbowIndex = -1;
+    int leftWeaponIndex = -1;
+    int leftShieldIndex = -1;
+    int rightShoulderIndex = -1;
+    int rightElbowIndex = -1;
+    int rightWeaponIndex = -1;
+    int chestIndex = -1;
+    int spineIndex = -1;
+    int lowerSpineIndex = -1;
+    int leftHipIndex = -1;
+    int leftKneeIndex = -1;
+    int rightHipIndex = -1;
+    int rightKneeIndex = -1;
+    int armPartsIndex = -1;
+    int legPartsIndex = -1;
+    int allBodyPartsIndex = -1;
 
     List<string> headKeys = new List<string>();
     List<string> hairKeys = new List<string>();
@@ -79,9 +81,10 @@ public class PartSelectionController : MonoBehaviour
             kneeKeys.AddRange(collections.kneeObjects.Keys);
             armPartsKeys.AddRange(collections.armParts.Keys);
             legPartsKeys.AddRange(collections.legParts.Keys);
-            // Init neccesary parts
+            // Change parts to make parts object active
             ChangeHeadPart();
             ChangeHairPart();
+            ChangeHeadAccesoriesPart();
             ChangeChestPart();
             ChangeSpinePart();
             ChangeLowerSpinePart();
@@ -130,6 +133,8 @@ public class PartSelectionController : MonoBehaviour
             armPartsIndexText.text = (armPartsIndex + 1) + "/" + armPartsKeys.Count;
         if (legPartsIndexText != null)
             legPartsIndexText.text = (legPartsIndex + 1) + "/" + legPartsKeys.Count;
+        if (allBodyPartsText != null)
+            allBodyPartsText.text = (allBodyPartsIndex + 1) + "/" + chestKeys.Count;
     }
 
     public int GetPartKeyIndex(bool isPrev, int currentIndex, List<string> keys)
@@ -262,6 +267,33 @@ public class PartSelectionController : MonoBehaviour
     public void ChangeLegParts(bool isPrev = false)
     {
         legPartsIndex = GetPartKeyIndex(isPrev, legPartsIndex, legPartsKeys);
+        characterParts.ChangeLegParts(collections.GetLegParts(legPartsKeys[legPartsIndex]));
+    }
+
+    public void ChangeAllBodyParts(bool isPrev = false)
+    {
+        allBodyPartsIndex = GetPartKeyIndex(isPrev, allBodyPartsIndex, chestKeys);
+        var key = chestKeys[allBodyPartsIndex];
+
+        var newIndex = chestKeys.IndexOf(key);
+        chestIndex = newIndex == -1 ? chestIndex : newIndex;
+
+        newIndex = spineKeys.IndexOf(key);
+        spineIndex = newIndex == -1 ? spineIndex : newIndex;
+
+        newIndex = lowerSpineKeys.IndexOf(key);
+        lowerSpineIndex = newIndex == -1 ? lowerSpineIndex : newIndex;
+
+        newIndex = armPartsKeys.IndexOf(key);
+        armPartsIndex = newIndex == -1 ? armPartsIndex : newIndex;
+
+        newIndex = legPartsKeys.IndexOf(key);
+        legPartsIndex = newIndex == -1 ? legPartsIndex : newIndex;
+
+        characterParts.ChangeChest(collections.GetChest(chestKeys[chestIndex]));
+        characterParts.ChangeSpine(collections.GetSpine(spineKeys[spineIndex]));
+        characterParts.ChangeLowerSpine(collections.GetLowerSpine(lowerSpineKeys[lowerSpineIndex]));
+        characterParts.ChangeArmParts(collections.GetArmParts(armPartsKeys[armPartsIndex]));
         characterParts.ChangeLegParts(collections.GetLegParts(legPartsKeys[legPartsIndex]));
     }
 }
