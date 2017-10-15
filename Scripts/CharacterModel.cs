@@ -47,7 +47,8 @@ public class CharacterModel : MonoBehaviour
     {
         if (model == null)
             return null;
-        var newModel = Instantiate(model, transform);
+        var newModel = Instantiate(model);
+        newModel.transform.parent = transform;
         newModel.transform.localPosition = Vector3.zero;
         newModel.transform.localEulerAngles = Vector3.zero;
         newModel.transform.localScale = Vector3.one;
