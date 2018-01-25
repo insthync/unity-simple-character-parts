@@ -8,6 +8,7 @@ public class CharacterModel : MonoBehaviour
     public Transform leftHandContainer;
     public Transform shieldContainer;
     public Transform headContainer;
+    public Transform[] customContainers;
     private Animator tempAnimator;
     public Animator TempAnimator
     {
@@ -20,6 +21,25 @@ public class CharacterModel : MonoBehaviour
     }
     private GameObject headModel;
     private readonly List<GameObject> weaponModels = new List<GameObject>();
+    private readonly Dictionary<int, GameObject> customModels = new Dictionary<int, GameObject>();
+
+    private readonly Dictionary<int, Transform> customModelContainers = new Dictionary<int, Transform>();
+    public Dictionary<int, Transform> CustomModelContainers
+    {
+        get
+        {
+            if (customModelContainers.Count != customContainers.Length)
+            {
+                customModelContainers.Clear();
+                for (var i = 0; i < customContainers.Length; ++i)
+                {
+                    var customContainer = customContainers[i];
+                    customModelContainers[i] = customContainer;
+                }
+            }
+            return customModelContainers;
+        }
+    }
 
     public void SetHeadModel(GameObject model)
     {
@@ -34,6 +54,21 @@ public class CharacterModel : MonoBehaviour
         AddModel(rightHandModel, rightHandContainer, weaponModels);
         AddModel(leftHandModel, leftHandContainer, weaponModels);
         AddModel(shieldModel, shieldContainer, weaponModels);
+    }
+
+    public void SetCustomModel(int position, GameObject model)
+    {
+        if (!CustomModelContainers.ContainsKey(position))
+            return;
+
+        GameObject oldModel = null;
+        if (customModels.TryGetValue(position, out oldModel))
+        {
+            if (oldModel != null)
+                Destroy(oldModel);
+            customModels.Remove(position);
+        }
+        customModels[position] = AddModel(model, CustomModelContainers[position], null);
     }
 
     private void ClearGameObjects(List<GameObject> list)
