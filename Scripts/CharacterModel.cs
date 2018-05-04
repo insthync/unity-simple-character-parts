@@ -22,6 +22,8 @@ public class CharacterModel : MonoBehaviour
     private GameObject headModel;
     private readonly List<GameObject> weaponModels = new List<GameObject>();
     private readonly Dictionary<int, GameObject> customModels = new Dictionary<int, GameObject>();
+    private Transform rightDamageLaunchTransform;
+    private Transform leftDamageLaunchTransform;
 
     private readonly Dictionary<int, Transform> customModelContainers = new Dictionary<int, Transform>();
     public Dictionary<int, Transform> CustomModelContainers
@@ -51,9 +53,24 @@ public class CharacterModel : MonoBehaviour
     public void SetWeaponModel(GameObject rightHandModel, GameObject leftHandModel, GameObject shieldModel)
     {
         ClearGameObjects(weaponModels);
-        AddModel(rightHandModel, rightHandContainer, weaponModels);
-        AddModel(leftHandModel, leftHandContainer, weaponModels);
+        var newRightHandModel = AddModel(rightHandModel, rightHandContainer, weaponModels);
+        var newLeftHandModel = AddModel(leftHandModel, leftHandContainer, weaponModels);
         AddModel(shieldModel, shieldContainer, weaponModels);
+        // Set damage launch transforms
+        rightDamageLaunchTransform = null;
+        leftDamageLaunchTransform = null;
+        if (newRightHandModel != null)
+        {
+            var comp = newRightHandModel.GetComponent<WeaponDamageLaunchTransform>();
+            if (comp != null && comp.transform != null)
+                rightDamageLaunchTransform = comp.transform;
+        }
+        if (newLeftHandModel != null)
+        {
+            var comp = newLeftHandModel.GetComponent<WeaponDamageLaunchTransform>();
+            if (comp != null && comp.transform != null)
+                leftDamageLaunchTransform = comp.transform;
+        }
     }
 
     public void SetCustomModel(int position, GameObject model)
@@ -91,5 +108,21 @@ public class CharacterModel : MonoBehaviour
         if (list != null)
             list.Add(newModel);
         return newModel;
+    }
+
+    public bool TryGetDamageLaunchTransform(bool isLeftHand, out Transform launchTransform)
+    {
+        launchTransform = null;
+        if (!isLeftHand && rightDamageLaunchTransform != null)
+        {
+            launchTransform = rightDamageLaunchTransform;
+            return true;
+        }
+        else if (isLeftHand && leftDamageLaunchTransform != null)
+        {
+            launchTransform = leftDamageLaunchTransform;
+            return true;
+        }
+        return false;
     }
 }
