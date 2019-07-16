@@ -73,6 +73,15 @@ public class CharacterModel : MonoBehaviour
         }
     }
 
+    public void ClearCustomModels()
+    {
+        foreach (var model in customModels.Values)
+        {
+            Destroy(model);
+        }
+        customModels.Clear();
+    }
+
     public void SetCustomModel(int position, GameObject model)
     {
         if (!CustomModelContainers.ContainsKey(position))
