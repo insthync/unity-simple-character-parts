@@ -62,14 +62,14 @@ public class CharacterModel : MonoBehaviour
         if (newRightHandModel != null)
         {
             var comp = newRightHandModel.GetComponent<WeaponDamageLaunchTransform>();
-            if (comp != null && comp.transform != null)
-                rightDamageLaunchTransform = comp.transform;
+            if (comp != null && comp.damageLaunchTransform != null)
+                rightDamageLaunchTransform = comp.damageLaunchTransform;
         }
         if (newLeftHandModel != null)
         {
             var comp = newLeftHandModel.GetComponent<WeaponDamageLaunchTransform>();
-            if (comp != null && comp.transform != null)
-                leftDamageLaunchTransform = comp.transform;
+            if (comp != null && comp.damageLaunchTransform != null)
+                leftDamageLaunchTransform = comp.damageLaunchTransform;
         }
     }
 
