@@ -9,16 +9,7 @@ public class CharacterModel : MonoBehaviour
     public Transform shieldContainer;
     public Transform headContainer;
     public Transform[] customContainers;
-    private Animator tempAnimator;
-    public Animator TempAnimator
-    {
-        get
-        {
-            if (tempAnimator == null)
-                tempAnimator = GetComponent<Animator>();
-            return tempAnimator;
-        }
-    }
+    public Animator CacheAnimator { get; private set; }
     private GameObject headModel;
     private readonly List<GameObject> weaponModels = new List<GameObject>();
     private readonly Dictionary<int, GameObject> customModels = new Dictionary<int, GameObject>();
@@ -41,6 +32,11 @@ public class CharacterModel : MonoBehaviour
             }
             return customModelContainers;
         }
+    }
+
+    private void Awake()
+    {
+        CacheAnimator = GetComponent<Animator>();
     }
 
     public void SetHeadModel(GameObject model)
